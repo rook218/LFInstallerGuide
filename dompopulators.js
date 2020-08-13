@@ -1,3 +1,62 @@
+const serverHTML = `
+   <div class="top-row">
+      <div class="server-name">
+         <label for="server-name">Server Name:</label>
+         <input type="text" name="server-name">
+      </div>
+      <div class="delete-container">
+         X
+      </div>
+   </div>
+   <div class="software-options options-section">
+      <h3>Software to install on this server:</h3>
+      <div class="option">
+         <input type="checkbox" name="forms">
+         <label for="forms">Forms 10.4.4</label>
+      </div>
+      <div class="option">
+         <input type="checkbox" name="webaccess">
+         <label for="webaccess">Web Access 10.4.4</label>
+      </div>
+      <div class="option">
+         <input type="checkbox" name="weblink">
+         <label for="weblink">WebLink 10.2</label>
+      </div>
+      <div class="option">
+         <input type="checkbox" name="workflow">
+         <label for="workflow">Workflow 10.4</label>
+      </div>
+      <div class="option">
+         <input type="checkbox" name="server">
+         <label for="server">LF Server 10.4.2</label>
+      </div>
+      <div class="option">
+         <input type="checkbox" name="lfds">
+         <label for="lfds">LFDS 10.4.2</label>
+      </div>
+      <div class="option">
+         <input type="checkbox" name="sql">
+         <label for="sql">SQL Server instance</label>
+      </div>
+   </div>
+   <div class="config-options options-section">
+      <h3>Other server options:</h3>
+      <div class="option">
+         <h5>Domain Joined?</h5>
+         <input type="radio" name="dmz" value="yes">
+         <label for="yes">Yes</label>
+         <input type="radio" name="dmz" value="no">
+         <label for="no">No</label>
+      </div>
+      <div class="option">
+         <h5>Publicly Accessible?</h5>
+         <input type="radio" name="public" value="yes">
+         <label for="yes">Yes</label>
+         <input type="radio" name="public" value="no">
+         <label for="no">No</label>
+      </div>
+   </div>`;
+
 // function to add a new server object on clicking the button
 const addServerButton = document.querySelector('button.add-server');
 let formsOptions = document.querySelectorAll('input[name=forms]');
