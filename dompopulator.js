@@ -58,8 +58,8 @@ const serverHTML = `
    </div>`;
 
 // function to add a new server object on clicking the button
-const addServerButton = document.querySelector('button.add-server');
 let formsOptions = document.querySelectorAll('input[name=forms]');
+const addServerButton = document.querySelector('button.add-server');
 addServerButton.addEventListener('click', addNewServer);
 
 function addNewServer() {
@@ -109,17 +109,9 @@ function onFormsServerChange() {
     let checkedFormsOptions = document.querySelectorAll('input[name=forms]:checked');
     if (checkedFormsOptions.length > 1) {
         checkedFormsOptions.forEach(function(checkbox) {
-            let localOption = formsOptionsElement.cloneNode();
-            localOption.innerHTML = formsPrimaryHTML;
+            let localOption = formsOptionsElement.cloneNode(true);
             checkbox.closest('.server').querySelector('.config-options')
                 .appendChild(localOption)
         });
     }
 }
-
-
-
-// on clicking the return button, returns a ServerList object
-// which contains a list of all servers as configured and their properties
-const returnResultsButton = document.querySelector('.log-options');
-returnResultsButton.addEventListener('click', createServerList);
