@@ -1,0 +1,22 @@
+// 0 block = preparation and preconfig
+10. open ports:
+20: configure certificate with following requirements for internal validation
+30: install SQL Server (version will depend on license) 2008 R2+ on SQLSERVERNAME
+33: install SSMS
+36: create an SA account for SQL to run DB connections from
+39: Allow 
+
+
+// 100 block = LFDS
+110. Install LFDS
+120. Generate master license on LFDS
+
+// 200 block = LFS
+200. Install LFS and license it against LFDS
+210. Install desktop client with admin console on LFS
+220. In LFDS on LFDSSERVER, relicense LFS to give public users access to WebLink.
+220. 
+
+//300 block = forms config
+300: install forms on PRIMARYFORMSSERVERNAME
+310: 
