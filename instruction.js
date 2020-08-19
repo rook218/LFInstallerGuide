@@ -1,6 +1,6 @@
 // defines servers and serverlist classes
 class Server {
-    constructor(name, forms, webAccess, webLink, workflow, lfs, lfds, sql, isPublic, domainJoined, primaryForms) {
+    constructor(name, forms, webAccess, webLink, workflow, lfs, lfds, sql, isPublic, domainJoined, primaryForms, sts) {
         this.portsToLFDS = [];
         this.portsToLFS = [];
 
@@ -17,7 +17,8 @@ class Server {
 
         this.forms = forms;
         this.primaryForms = primaryForms;
-        this.changeFormsEndpoints = false;
+
+        this.sts = sts;
 
         if (!this.lfds) {
             this.portsToLFDS.push(443, 5048, 5049);
@@ -73,10 +74,6 @@ class Server {
         this.portsToLFS.sort(function(first, second) {
             return first > second;
         });
-
-        if (this.forms && !this.primaryForms) {
-            this.changeFormsEndpoints = true;
-        }
     }
 }
 
@@ -113,14 +110,15 @@ function createServerList() {
         const lfs = thisServer.querySelector('input[name=server]').checked;
         const lfds = thisServer.querySelector('input[name=lfds]').checked;
         const sql = thisServer.querySelector('input[name=sql]').checked;
-        const domainJoined = thisServer.querySelector('input[name=dmz]').value === 'Yes';
-        const isPublic = thisServer.querySelector('input[name=public]').value === 'Yes';
+        const domainJoined = thisServer.querySelector('input[name=domain]').checked;
+        const isPublic = thisServer.querySelector('input[name=public]').checked;
+        const sts = thisServer.querySelector('input[name=sts]').checked;
 
         const primaryFormsOption = thisServer.querySelector('input[name=formsPrimary]');
         const primaryForms = primaryFormsOption == null ? false : primaryFormsOption.value === 'Yes';
 
         let server = new Server(name, forms, webAccess, webLink, workflow,
-            lfs, lfds, sql, isPublic, domainJoined, primaryForms);
+            lfs, lfds, sql, isPublic, domainJoined, primaryForms, sts);
         serverList.servers.push(server);
     });
     console.log(serverList.servers);
@@ -195,7 +193,7 @@ function generateInstructions(serverList) {
                     '2a. Locate the netTcpBinding node and set security mode from Transport to None',
                     '3. Open C:\\Program Files\\Laserfiche\\Laserfiche Forms\\Config\\Web.config',
                     '3a. Locate the netTcpBinding node and set security mode from Transport to None'
-                ]))
+                ]));
             }
         }
 
@@ -224,5 +222,7 @@ function generateInstructions(serverList) {
                 ]));
             }
         }
-    })
+    });
+
+    return instructions;
 }

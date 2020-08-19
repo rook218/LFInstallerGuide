@@ -39,22 +39,21 @@ const serverHTML = `
          <label for="sql">SQL Server instance</label>
       </div>
    </div>
-   <div class="config-options options-section">
-      <h3>Other server options:</h3>
-      <div class="option">
-         <h5>Domain Joined?</h5>
-         <input type="radio" name="dmz" value="yes">
-         <label for="yes">Yes</label>
-         <input type="radio" name="dmz" value="no">
-         <label for="no">No</label>
-      </div>
-      <div class="option">
-         <h5>Publicly Accessible?</h5>
-         <input type="radio" name="public" value="yes">
-         <label for="yes">Yes</label>
-         <input type="radio" name="public" value="no">
-         <label for="no">No</label>
-      </div>
+   <div class="option">
+        <input type="checkbox" name="sts">
+        <label for="sts">STS instance</label>
+    </div>
+    </div>
+    <div class="config-options options-section">
+        <h3>Other server options:</h3>
+        <div class="option">
+            <input type="checkbox" name="domain">
+            <label for="domain">Domain Joined</label>
+        </div>
+        <div class="option">
+            <input type="checkbox" name="public">
+            <label for="public">Publicly Accessible</label>
+        </div>
    </div>`;
 
 // function to add a new server object on clicking the button
