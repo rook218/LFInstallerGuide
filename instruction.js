@@ -164,6 +164,8 @@ function generateInstructions(serverList) {
 
     // generates an array of instructions from new Instructions objects, which we can clean up later
     serverList.forEach(server => {
+        let stsServerName = server.sts ? server.name : lfdsServerName;
+
         if (server.lfds) {
             instructions.push(new Instruction(110, "VAR", true, "Install LFDS on " + lfdsServerName + ".", null));
             instructions.push(new Instruction(120, "VAR", true, "Open LFDS and install master license on " + lfdsServerName + ".", null));
@@ -197,13 +199,13 @@ function generateInstructions(serverList) {
             }
         }
 
-        // TODO: add STS options and instructions
         if (server.forms && !server.primaryForms) {
+
             instructions.push(new Instruction(300, "VAR", true, "Install Forms on " + server.name + "."))
             instructions.push(new Instruction(310, "VAR", true, "Navigate to localhost/FormsConfig on " + server.name + " and configure with the following options:", [
                 "Database page: DB name should be " + sqlServerName + "\\\\SQLEXPRESS by default and the user account is the SA account established already.",
                 "Server page: Server name should be " + primaryFormsServerName + "/Forms by default.",
-                "User Authentication: Select the authentication type. This guide will only cover LFDS: Input " + lfdsServerName + "/LFDSSTS as the STS instance name, set the forms admin to an admin account in LFDS, and set up the LFDS groups that should authenticate here."
+                "User Authentication: Select the authentication type. This guide will only cover LFDS: Input " + stsServerName + "/LFDSSTS as the STS instance name, set the forms admin to an admin account in LFDS, and set up the LFDS groups that should authenticate here."
             ]));
             if (!server.domainJoined) {
                 instructions.push(new Instruction(370, "VAR", true, "Since this server is domain joined, do not modify the Forms config files with new endpoints.", null));
@@ -216,7 +218,7 @@ function generateInstructions(serverList) {
                     '1d. Locate the netTcpBinding block and change security mode from transport to none.',
                     '2. Open C:\\Program Files\\Laserfiche\\Laserfiche Forms\\Forms\\Web.config',
                     '2a. Locate the CWF client configuration block. Change the localhost references for lfrouting, lfpushnotification, lfautotrigger, lflicensing, and lfformexport endpoints, to ' + primaryFormsServerName + '.',
-                    '2b. (For LFDS STS authentication only) Locate the wsFederation node and change the realm and reply attributes to the address of the DMZ server (' + server.name + '), and the issuer variable to the internal LFDS STS Server (' + lfdsServerName + ').',
+                    '2b. (For LFDS STS authentication only) Locate the wsFederation node and change the realm and reply attributes to the address of the DMZ server (' + server.name + '), and the issuer variable to the internal LFDS STS Server (' + stsServerName + ').',
                     '2c. Locate the netTcpBinding block and change security mode from transport to none.',
                     '3. Stop and disable the Forms services: LF Forms Routing, LF Notification Hub, LF Notification Master.'
                 ]));
