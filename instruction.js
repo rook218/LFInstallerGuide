@@ -109,13 +109,13 @@ function createServerList() {
         const workflow = thisServer.querySelector('input[name=workflow]').checked;
         const lfs = thisServer.querySelector('input[name=server]').checked;
         const lfds = thisServer.querySelector('input[name=lfds]').checked;
+        const sts = thisServer.querySelector('input[name=sts]').checked;
         const sql = thisServer.querySelector('input[name=sql]').checked;
+
         const domainJoined = thisServer.querySelector('input[name=domain]').checked;
         const isPublic = thisServer.querySelector('input[name=public]').checked;
-        const sts = thisServer.querySelector('input[name=sts]').checked;
-
-        const primaryFormsOption = thisServer.querySelector('input[name=formsPrimary]');
-        const primaryForms = primaryFormsOption == null ? false : primaryFormsOption.value === 'Yes';
+        const primaryFormsOption = thisServer.querySelector('input[name=primaryForms]');
+        const primaryForms = primaryFormsOption ? primaryFormsOption.checked : false;
 
         let server = new Server(name, forms, webAccess, webLink, workflow,
             lfs, lfds, sql, isPublic, domainJoined, primaryForms, sts);

@@ -94,11 +94,10 @@ function onFormsServerChange() {
         })
         // creates the element that we'll append
     const formsPrimaryHTML =
-        `<h5>Primary Forms Server?</h5>
-	   <input type="radio" name="public" value="yes">
-	   <label for="yes">Yes</label>
-	   <input type="radio" name="public" value="no">
-	   <label for="no">No</label>`;
+        `<div class="option">
+            <input type="checkbox" name="primaryForms">
+            <label for="public">Primary Forms?</label>
+        </div>`;
     const formsOptionsElement = document.createElement('div');
     formsOptionsElement.classList.add('option')
     formsOptionsElement.classList.add('primary-forms');
