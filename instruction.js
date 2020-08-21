@@ -97,7 +97,7 @@ class Instruction {
 // on clicking the return button, returns a ServerList object
 // which contains a list of all servers as configured and their properties
 const returnResultsButton = document.querySelector('.log-options');
-returnResultsButton.addEventListener('click', createServerList);
+returnResultsButton.addEventListener('click', createPopup);
 
 function createServerList() {
     let serverList = new ServerList();
@@ -140,7 +140,7 @@ function generateInstructions(serverList) {
     let secondaryFormsServerNames = [];
     let primaryFormsServerName;
 
-    serverList.forEach(server => {
+    serverList.servers.forEach(server => {
         if (server.lfds) {
             lfdsServerName = server.name;
         }
@@ -163,7 +163,7 @@ function generateInstructions(serverList) {
     //#endregion
 
     // generates an array of instructions from new Instructions objects, which we can clean up later
-    serverList.forEach(server => {
+    serverList.servers.forEach(server => {
         let stsServerName = server.sts ? server.name : lfdsServerName;
 
         if (server.lfds) {
@@ -200,7 +200,6 @@ function generateInstructions(serverList) {
         }
 
         if (server.forms && !server.primaryForms) {
-
             instructions.push(new Instruction(300, "VAR", true, "Install Forms on " + server.name + "."))
             instructions.push(new Instruction(310, "VAR", true, "Navigate to localhost/FormsConfig on " + server.name + " and configure with the following options:", [
                 "Database page: DB name should be " + sqlServerName + "\\\\SQLEXPRESS by default and the user account is the SA account established already.",
@@ -208,7 +207,7 @@ function generateInstructions(serverList) {
                 "User Authentication: Select the authentication type. This guide will only cover LFDS: Input " + stsServerName + "/LFDSSTS as the STS instance name, set the forms admin to an admin account in LFDS, and set up the LFDS groups that should authenticate here."
             ]));
             if (!server.domainJoined) {
-                instructions.push(new Instruction(370, "VAR", true, "Since this server is domain joined, do not modify the Forms config files with new endpoints.", null));
+                instructions.push(new Instruction(370, "VAR", true, "Since " + server.name + "is domain joined, do not modify the Forms config files with new endpoints.", null));
             } else {
                 instructions.push(new Instruction(370, "VAR", true, "(Note, this assumes the modern version of Forms, 10.4 or later) Modify the Forms configuration files as follows:", [
                     "1. Open C:\\Program Files\\Laserfiche\\Laserfiche Forms\\Config\\Web.config.",
@@ -225,6 +224,38 @@ function generateInstructions(serverList) {
             }
         }
     });
-
     return instructions;
+}
+
+function createHTML(instructions) {
+    let html = '<div class="instructions-wrapper"><ol>'
+    let counter = 0;
+    instructions.forEach(instruction => {
+        counter++;
+        html += '<li><h5>' + instruction.header + '</h5>'
+            // TODO: Fix this, it doesn't output the substeps
+        if (instructions.substeps) {
+            html += '<ol>';
+            instructions.substeps.forEach(substep => {
+                html += '<li>' + substep + '</li>';
+            })
+            html += '</ol>';
+        }
+        html += '</li>';
+    });
+    html += '</ol></div>'
+    return html;
+}
+
+function createPopup() {
+    let serverList = createServerList();
+    let instructions = generateInstructions(serverList);
+    let html = createHTML(instructions);
+
+    console.log(serverList);
+    console.log(instructions);
+    console.log(html);
+
+    let newWindow = window.open('');
+    newWindow.document.write(html);
 }
