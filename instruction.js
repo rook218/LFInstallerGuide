@@ -175,7 +175,7 @@ function generateInstructions(serverList) {
                 "Use the database SA account set up in the pre-config steps.",
                 "If using LFDS, use " + lfdsServerName + " as the licensing server."
             ]));
-            instructions.push(new Instruction(210, "VAR", true, "Install desktop client with admin console and connect to your new instance.", [
+            instructions.push(new Instruction(210, "VAR", true, "Install desktop client with admin console on " + server.name + " and connect to your new instance.", [
                 "If this is a migration: back up the SQL DBs from the old SQL server to the new, copy over all volumes, and run the Register Repository task in the admin console",
                 "If this is a new install: Create a new repository from the admin console."
             ]));
@@ -232,11 +232,11 @@ function createHTML(instructions) {
     let counter = 0;
     instructions.forEach(instruction => {
         counter++;
-        html += '<li><h5>' + instruction.header + '</h5>'
+        html += '<li><p>' + instruction.header + '</p>'
             // TODO: Fix this, it doesn't output the substeps
-        if (instructions.substeps) {
+        if (instruction.substeps) {
             html += '<ol>';
-            instructions.substeps.forEach(substep => {
+            instruction.substeps.forEach(substep => {
                 html += '<li>' + substep + '</li>';
             })
             html += '</ol>';
