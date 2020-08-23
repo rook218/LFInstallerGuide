@@ -166,6 +166,16 @@ function generateInstructions(serverList) {
     serverList.servers.forEach(server => {
         let stsServerName = server.sts ? server.name : lfdsServerName;
 
+        instructions.push(new Instruction(0, "Customer", true, "Pre-install: Install SQL Server and SQL Server Management Studio on " + sqlServerName + ".", [
+            "Set up an SA account to use for DB connections, and enable Mixed Mode Authentication on the server."
+        ]));
+        if (server.portsToLFDS.length > 0) {
+            instructions.push(new Instruction(50, "Customer", true, "Ensure the following ports are open between " + server.name + " and LFDS server " + lfdsServerName + ".", server.portsToLFDS));
+        }
+        if (server.portsToLFS > 0) {
+            instructions.push(new Instruction(65, "Customer", true, "Ensure the following ports are open between " + server.name + " and LFS server " + lfsServerName + ".", server.portsToLFS));
+        }
+
         if (server.lfds) {
             instructions.push(new Instruction(110, "VAR", true, "Install LFDS on " + lfdsServerName + ".", null));
             instructions.push(new Instruction(120, "VAR", true, "Open LFDS and install master license on " + lfdsServerName + ".", null));
@@ -206,8 +216,8 @@ function generateInstructions(serverList) {
                 "Server page: Server name should be " + primaryFormsServerName + "/Forms by default.",
                 "User Authentication: Select the authentication type. This guide will only cover LFDS: Input " + stsServerName + "/LFDSSTS as the STS instance name, set the forms admin to an admin account in LFDS, and set up the LFDS groups that should authenticate here."
             ]));
-            if (!server.domainJoined) {
-                instructions.push(new Instruction(370, "VAR", true, "Since " + server.name + "is domain joined, do not modify the Forms config files with new endpoints.", null));
+            if (server.domainJoined) {
+                instructions.push(new Instruction(370, "VAR", true, "Since " + server.name + " is domain joined, do not modify the Forms config files with new endpoints.", null));
             } else {
                 instructions.push(new Instruction(370, "VAR", true, "(Note, this assumes the modern version of Forms, 10.4 or later) Modify the Forms configuration files as follows:", [
                     "1. Open C:\\Program Files\\Laserfiche\\Laserfiche Forms\\Config\\Web.config.",
@@ -224,6 +234,15 @@ function generateInstructions(serverList) {
             }
         }
     });
+    instructions.sort(function(a, b) {
+        if (parseInt(a.step) < parseInt(b.step)) {
+            return -1;
+        } else if (parseInt(a.step) > parseInt(b.step)) {
+            return 1
+        } else {
+            return 0;
+        }
+    })
     return instructions;
 }
 
