@@ -112,4 +112,20 @@ function onFormsServerChange() {
                 .appendChild(localOption)
         });
     }
+
+    // checks to make sure that if there is an option for primary forms, that only one is selected
+
+    // selects all the primaryOptions, since there may be new ones after changing the forms install options
+    let primaryOption = document.querySelectorAll('input[name=primaryForms]');
+    primaryOption.forEach(pOption => { // foreach primary forms option, adds an event listener
+        pOption.addEventListener('change', function(event) {
+            let checked = event.target.checked; // checks if the user checked (true) or unchecked (false) the box
+            if (checked) { // if it was checked, then remove the checkbox from every primary forms option on the board (including the one we just set)
+                primaryOption.forEach(option => {
+                    option.checked = false;
+                })
+            }
+            event.target.checked = checked; // sets the checked status of the element back to what the user action was
+        })
+    });
 }
