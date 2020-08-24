@@ -42,6 +42,19 @@ html {
     grid-template-columns: auto 1.25rem;
 }
 
+.server-name input {
+    background-color: transparent;
+    border: 0px;
+    border-bottom: 2px solid white;
+    color: white;
+    font-family: monospace;
+    font-size: 1.5rem;
+}
+
+.server-name input:focus {
+    outline: none;
+}
+
 .delete-container {
     cursor: pointer;
     display: inline-block;
@@ -70,7 +83,7 @@ html {
     width: 100%;
 }
 
-button.add-server {
+.button-container button {
     float: right;
     margin: 2rem;
     padding: .5rem;
