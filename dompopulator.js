@@ -83,12 +83,7 @@ function addNewServer() {
         formsOption.addEventListener('change', onFormsServerChange);
     });
 
-    // Validates that server names are all filled in
-    let serverNameFields = document.querySelectorAll('.server-name input');
-    serverNameFields.forEach(field => {
-        field.addEventListener('change', validateServerNames);
-    });
-    validateServerNames();
+    addEventListenersForServerNameFields();
 
 }
 
@@ -139,8 +134,18 @@ function onFormsServerChange() {
 }
 
 // Validation section
+function addEventListenersForServerNameFields() {
+    // Validates that server names are all filled in
+    let serverNameFields = document.querySelectorAll('.server-name input');
+    serverNameFields.forEach(field => {
+        field.addEventListener('change', validateServerNames);
+    });
+    validateServerNames();
+}
+addEventListenersForServerNameFields();
 
 function validateServerNames() {
+    console.log('validateServerNames triggered');
     let serverNamesValid = true;
     let serverNameFields = document.querySelectorAll('.server-name input');
     serverNameFields.forEach(field => {
@@ -151,6 +156,9 @@ function validateServerNames() {
     if (!serverNamesValid) {
         document.querySelector('.generate-instructions').disabled = true;
         document.querySelector('.generate-instructions').style.cursor = 'not-allowed';
+    } else {
+        document.querySelector('.generate-instructions').disabled = false;
+        document.querySelector('.generate-instructions').style.cursor = 'pointer';
     }
 }
 validateServerNames();
