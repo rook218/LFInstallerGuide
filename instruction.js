@@ -96,7 +96,7 @@ class Instruction {
 
 // on clicking the return button, returns a ServerList object
 // which contains a list of all servers as configured and their properties
-const returnResultsButton = document.querySelector('.log-options');
+const returnResultsButton = document.querySelector('.generate-instructions');
 returnResultsButton.addEventListener('click', createPopup);
 
 function createServerList() {
@@ -270,11 +270,6 @@ function createPopup() {
     let serverList = createServerList();
     let instructions = generateInstructions(serverList);
     let html = createHTML(instructions);
-
-    console.log(serverList);
-    console.log(instructions);
-    console.log(html);
-
     let newWindow = window.open('');
     newWindow.document.write(html);
 }

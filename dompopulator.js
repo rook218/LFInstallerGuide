@@ -1,7 +1,7 @@
 const serverHTML = `
    <div class="top-row">
       <div class="server-name">
-         <label for="server-name">Server Name:</label>
+         <label for="server-name">Server FQDN:</label>
          <input type="text" name="server-name">
       </div>
       <div class="delete-container">
@@ -82,6 +82,14 @@ function addNewServer() {
     formsOptions.forEach(formsOption => {
         formsOption.addEventListener('change', onFormsServerChange);
     });
+
+    // Validates that server names are all filled in
+    let serverNameFields = document.querySelectorAll('.server-name input');
+    serverNameFields.forEach(field => {
+        field.addEventListener('change', validateServerNames);
+    });
+    validateServerNames();
+
 }
 
 // on selecting the form install button on anything, checks if
@@ -129,3 +137,20 @@ function onFormsServerChange() {
         })
     });
 }
+
+// Validation section
+
+function validateServerNames() {
+    let serverNamesValid = true;
+    let serverNameFields = document.querySelectorAll('.server-name input');
+    serverNameFields.forEach(field => {
+        if (field.value.length === 0) {
+            serverNamesValid = false;
+        }
+    });
+    if (!serverNamesValid) {
+        document.querySelector('.generate-instructions').disabled = true;
+        document.querySelector('.generate-instructions').style.cursor = 'not-allowed';
+    }
+}
+validateServerNames();
