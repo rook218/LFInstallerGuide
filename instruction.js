@@ -199,37 +199,41 @@ function generateInstructions(serverList) {
             // if there are secondary forms servers, need to take this step as well
             if (secondaryFormsServerNames.length > 0) {
                 instructions.push(new Instruction(380, "VAR", true, "Since you have secondary forms instance(s), configure primary forms server " + server.name + " with the following:", [
-                    '1. Open C:\\Program Files\\Laserfiche\\Laserfiche Forms\\Forms\\Web.config',
-                    '1a. Locate the netTcpBinding node and set security mode from Transport to None',
-                    '2. Open C:\\Program Files\\Laserfiche\\Laserfiche Forms\\Forms\\bin\\RoutingEngineServiceHost.exe.config',
-                    '2a. Locate the netTcpBinding node and set security mode from Transport to None',
-                    '3. Open C:\\Program Files\\Laserfiche\\Laserfiche Forms\\Config\\Web.config',
-                    '3a. Locate the netTcpBinding node and set security mode from Transport to None'
+                    'Open C:\\Program Files\\Laserfiche\\Laserfiche Forms\\Forms\\Web.config',
+                    '--Locate the netTcpBinding node and set security mode from Transport to None',
+                    'Open C:\\Program Files\\Laserfiche\\Laserfiche Forms\\Forms\\bin\\RoutingEngineServiceHost.exe.config',
+                    '--Locate the netTcpBinding node and set security mode from Transport to None',
+                    'Open C:\\Program Files\\Laserfiche\\Laserfiche Forms\\Config\\Web.config',
+                    '--Locate the netTcpBinding node and set security mode from Transport to None'
                 ]));
             }
         }
 
         if (server.forms && !server.primaryForms) {
+            let publicServerAddress = server.isPublic ? 'the <b>public-facing</b> URL that users will use to access the Forms server, in the format //DomainName:port/Forms' : "//" + server.name + ":80/Forms"
             instructions.push(new Instruction(300, "VAR", true, "Install Forms on " + server.name + "."))
             instructions.push(new Instruction(310, "VAR", true, "Navigate to localhost/FormsConfig on " + server.name + " and configure with the following options:", [
                 "Database page: DB name should be " + sqlServerName + "\\\\SQLEXPRESS by default and the user account is the SA account established already.",
                 "Server page: Server name should be " + primaryFormsServerName + "/Forms by default.",
-                "User Authentication: Select the authentication type. This guide will only cover LFDS: Input " + stsServerName + "/LFDSSTS as the STS instance name, set the forms admin to an admin account in LFDS, and set up the LFDS groups that should authenticate here."
+                "User Authentication: Select the authentication type. This guide will only cover LFDS: Input " + stsServerName + "/LFDSSTS as the STS instance name, set the forms admin to an admin account in LFDS, and set up the LFDS groups that should authenticate here.",
+                "User Authentication: Select the LFDS groups that should be able to authenticate, and LFDS user to be the Forms administrator.",
+                "User Authentication: Under Laserfiche Forms URL, type " + publicServerAddress,
+                "User Authentication: Click save"
             ]));
             if (server.domainJoined) {
                 instructions.push(new Instruction(370, "VAR", true, "Since " + server.name + " is domain joined, do not modify the Forms config files with new endpoints.", null));
             } else {
                 instructions.push(new Instruction(370, "VAR", true, "(Note, this assumes the modern version of Forms, 10.4 or later) Modify the Forms configuration files as follows:", [
-                    "1. Open C:\\Program Files\\Laserfiche\\Laserfiche Forms\\Config\\Web.config.",
-                    '1a. Find the endpoint address for lfrouting, by default this should start with "<endpoint address="net.tcp://localhost:8168/lfrouting" binding...".',
-                    '1b. Change the enpdoint address from localhost to your primary forms instance, "<endpoint address="net.tcp://' + primaryFormsServerName + ':8168/lfrouting" binding...".',
-                    '1c. Change the lflicensing endpoint in the same way, from localhost to "<endpoint address="net.tcp://' + primaryFormsServerName + ':8738/lflicensing" binding...".',
-                    '1d. Locate the netTcpBinding block and change security mode from transport to none.',
-                    '2. Open C:\\Program Files\\Laserfiche\\Laserfiche Forms\\Forms\\Web.config',
-                    '2a. Locate the CWF client configuration block. Change the localhost references for lfrouting, lfpushnotification, lfautotrigger, lflicensing, and lfformexport endpoints, to ' + primaryFormsServerName + '.',
-                    '2b. (For LFDS STS authentication only) Locate the wsFederation node and change the realm and reply attributes to the address of the DMZ server (' + server.name + '), and the issuer variable to the internal LFDS STS Server (' + stsServerName + ').',
-                    '2c. Locate the netTcpBinding block and change security mode from transport to none.',
-                    '3. Stop and disable the Forms services: LF Forms Routing, LF Notification Hub, LF Notification Master.'
+                    "Open C:\\Program Files\\Laserfiche\\Laserfiche Forms\\Config\\Web.config.",
+                    '--Find the endpoint address for lfrouting, by default this should start with "&lt;endpoint address="net.tcp://localhost:8168/lfrouting" binding...".',
+                    '--Change the enpdoint address from localhost to your primary forms instance, "&lt;endpoint address="net.tcp://' + primaryFormsServerName + ':8168/lfrouting" binding...".',
+                    '--Change the lflicensing endpoint in the same way, from localhost to "&lt;endpoint address="net.tcp://' + primaryFormsServerName + ':8738/lflicensing" binding...".',
+                    '--Locate the netTcpBinding block and change security mode from transport to none.',
+                    'Open C:\\Program Files\\Laserfiche\\Laserfiche Forms\\Forms\\Web.config',
+                    '--Locate the CWF client configuration block. Change the localhost references for lfrouting, lfpushnotification, lfautotrigger, lflicensing, and lfformexport endpoints, to ' + primaryFormsServerName + '.',
+                    '--(For LFDS STS authentication only) Locate the wsFederation node and change the realm and reply attributes to the address of the DMZ server (' + server.name + '), and the issuer variable to the internal LFDS STS Server (' + stsServerName + ').',
+                    '--Locate the netTcpBinding block and change security mode from transport to none.',
+                    'Stop and disable the Forms services: LF Forms Routing, LF Notification Hub, LF Notification Master.'
                 ]));
             }
         }
@@ -252,7 +256,6 @@ function createHTML(instructions) {
     instructions.forEach(instruction => {
         counter++;
         html += '<li><p>' + instruction.header + '</p>'
-            // TODO: Fix this, it doesn't output the substeps
         if (instruction.substeps) {
             html += '<ol>';
             instruction.substeps.forEach(substep => {

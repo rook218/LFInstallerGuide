@@ -20,3 +20,4 @@
 //300 block = forms config
 300: install forms on PRIMARYFORMSSERVERNAME
 310: 
+370: Specifics for Forms primary /secondary installs (modifying XML)

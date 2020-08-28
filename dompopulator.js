@@ -134,6 +134,8 @@ function onFormsServerChange() {
 }
 
 // Validation section
+
+//#region Event Listeners for validating that each server has a name
 function addEventListenersForServerNameFields() {
     // Validates that server names are all filled in
     let serverNameFields = document.querySelectorAll('.server-name input');
@@ -145,7 +147,6 @@ function addEventListenersForServerNameFields() {
 addEventListenersForServerNameFields();
 
 function validateServerNames() {
-    console.log('validateServerNames triggered');
     let serverNamesValid = true;
     let serverNameFields = document.querySelectorAll('.server-name input');
     serverNameFields.forEach(field => {
@@ -162,3 +163,4 @@ function validateServerNames() {
     }
 }
 validateServerNames();
+//#endregion
