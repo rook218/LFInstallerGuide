@@ -236,6 +236,18 @@ function generateInstructions(serverList) {
                     'Stop and disable the Forms services: LF Forms Routing, LF Notification Hub, LF Notification Master.'
                 ]));
             }
+            if (!server.sts) {
+                instructions.push(new Instruction(385, "VAR", true, "This Forms server does not have an STS instance, so the following steps are required", [
+                    "Ensure that " + server.name + " and " + lfdsServerName + " both have relevant certificates.",
+                    "Verify that port 5048 is open between the servers.",
+                    "Open the LF Forms Endpoint configuration utility from c:\\program files\\laserfiche\\laserfiche forms\\forms\\bin\\EndpointUtility.exe",
+                    "In the Forms Installation Path field, specify the Forms installation folder.",
+                    "In the LFDS Address field, specify the FQDN of the LFDS Server (" + lfdsServerName + ")",
+                    "If the LFDS server service is not using the default provider, specify it.",
+                    "Select Use Alternative Service checkbox and specify the certificate",
+                    "Grant Forms app pool full control of the certificate's private key"
+                ]));
+            }
         }
     });
     instructions.sort(function(a, b) {
